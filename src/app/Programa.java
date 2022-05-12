@@ -34,14 +34,11 @@ public class Programa {
 			System.out.print("Data de saida (dd/MM/yyyy): ");
 			checkoutDate = simpleDateFormat.parse(scanner.next());
 
-			Date nowDate = new Date();
-			if (checkinDate.before(nowDate) || checkoutDate.before(checkoutDate)) {
-				System.out.println("ERRO NAS DATAS DA RESERVA, MENOR QUE DATA ATUAL");
-			} else if (!checkoutDate.after(checkinDate)) {
-				System.out.println("Erro na Reserva!**** Data de Entrada maior que de Saida****!");
+			String erro = reserva.atualizaDatas(checkinDate, checkoutDate);
+			if (erro != null) {
+				System.out.println("ERRO NA RESERVA!****" + erro);
 			} else {
 
-				reserva.atualizaDatas(checkinDate, checkoutDate);
 				System.out.println("Reserva: " + reserva.toString());
 			}
 		}
