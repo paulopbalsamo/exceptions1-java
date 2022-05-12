@@ -6,24 +6,23 @@ import java.util.Date;
 import java.util.Scanner;
 
 import modelo.entidades.Reserva;
+import modelo.exceptions.DomainException;
 
 public class Programa {
 
-	public static void main(String[] args) throws ParseException {
+	public static void main(String[] args) {
 
 		Scanner scanner = new Scanner(System.in);
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
-		System.out.print("Numero do Quarto: ");
-		int numero = scanner.nextInt();
-		System.out.print("Data de entrada (dd/MM/yyyy): ");
-		Date checkinDate = simpleDateFormat.parse(scanner.next());
-		System.out.print("Data de saida (dd/MM/yyyy): ");
-		Date checkoutDate = simpleDateFormat.parse(scanner.next());
+		try {
+			System.out.print("Numero do Quarto: ");
+			int numero = scanner.nextInt();
+			System.out.print("Data de entrada (dd/MM/yyyy): ");
+			Date checkinDate = simpleDateFormat.parse(scanner.next());
+			System.out.print("Data de saida (dd/MM/yyyy): ");
+			Date checkoutDate = simpleDateFormat.parse(scanner.next());
 
-		if (!checkoutDate.after(checkinDate)) {
-			System.out.println("Erro na Reserva!*** Data de Checkout deve ser maior que data de Entrada***");
-		} else {
 			Reserva reserva = new Reserva(numero, checkinDate, checkoutDate);
 			System.out.println("Reserva: " + reserva.toString());
 
@@ -34,13 +33,15 @@ public class Programa {
 			System.out.print("Data de saida (dd/MM/yyyy): ");
 			checkoutDate = simpleDateFormat.parse(scanner.next());
 
-			String erro = reserva.atualizaDatas(checkinDate, checkoutDate);
-			if (erro != null) {
-				System.out.println("ERRO NA RESERVA!****" + erro);
-			} else {
-
-				System.out.println("Reserva: " + reserva.toString());
-			}
+			reserva.atualizaDatas(checkinDate, checkoutDate);
+			System.out.println("Reserva: " + reserva.toString());
+		} catch (ParseException e) {
+			System.out.println("Formato da data invalido!");
+		} catch (DomainException e) {
+			System.out.println("Erro na reserva: " + e.getMessage());
+		}
+		catch (RuntimeException e) {
+			System.out.println("ERRO INESPERADO!");
 		}
 
 		scanner.close();

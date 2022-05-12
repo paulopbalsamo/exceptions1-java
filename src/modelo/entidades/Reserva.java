@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import modelo.exceptions.DomainException;
+
 public class Reserva {
 
 	private int numeroQuarto;
@@ -16,7 +18,12 @@ public class Reserva {
 
 	}
 
-	public Reserva(int numeroQuarto, Date checkinDate, Date checkoutDate) {
+	public Reserva(int numeroQuarto, Date checkinDate, Date checkoutDate)  {
+
+		if (!checkoutDate.after(checkinDate)) {
+			throw new DomainException("Erro na Reserva!**** Data de Entrada maior que de Saida****!");
+		}
+
 		this.numeroQuarto = numeroQuarto;
 		this.checkinDate = checkinDate;
 		this.checkoutDate = checkoutDate;
@@ -43,19 +50,19 @@ public class Reserva {
 		return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
 	}
 
-	public String atualizaDatas(Date checkinDate, Date checkoutDate) {
+	public void atualizaDatas(Date checkinDate, Date checkoutDate)  {
 
 		Date nowDate = new Date();
 		if (checkinDate.before(nowDate) || checkoutDate.before(checkoutDate)) {
-			return "***ERRO NAS DATAS DA RESERVA, MENOR QUE DATA ATUAL****";
+			throw new DomainException("***ERRO NAS DATAS DA RESERVA, MENOR QUE DATA ATUAL****");
 		}
 		if (!checkoutDate.after(checkinDate)) {
-			return "Erro na Reserva!**** Data de Entrada maior que de Saida****!";
+			throw new DomainException("Erro na Reserva!**** Data de Entrada maior que de Saida****!");
 		}
 
 		this.checkinDate = checkinDate;
 		this.checkoutDate = checkoutDate;
-		return null;
+
 	}
 
 	@Override
